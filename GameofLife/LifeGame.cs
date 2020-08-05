@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
 
@@ -9,10 +10,14 @@ namespace GameofLife
     public class LifeGame
     {
         public BitArray World { get; set; }
+        public int Size { get; } 
+        public int Grid { get; }
 
         public LifeGame(int size)
         {
             World = new BitArray(size, false);
+            Size = size;
+            Grid = (int)Math.Sqrt(size);
         }
 
         public bool GetSquare(int square)
@@ -20,8 +25,9 @@ namespace GameofLife
             return World[square];
         }
 
-        public int[] SurrondingCells(int square, int size)
+        public int[] SurrondingCells(int square)
         {
+            int size = Size;
             int[] surround = new int[8];
             int grid = (int)Math.Sqrt(size);
             int index = size - 1;
@@ -53,7 +59,7 @@ namespace GameofLife
 
                 surround[1] = squareRight;  //Right
                 surround[4] = size - grid; //TopRight
-                surround[7] = squareRight + grid; //Bottom Right
+                surround[7] = squareRight + grid; //Bottom Right 5 -(4) + 5
                 surround[2] = squareUp;     //Top
                 surround[5] = squareDown;   //Bottom
                 surround[3] = squareUp - 1; //TopLeft
@@ -67,10 +73,10 @@ namespace GameofLife
                 squareDown = square - (size - grid);
                 surround[1] = squareRight;  //Right
                 surround[4] = squareRight - grid; //TopRight
-                surround[7] = squareRight + grid; //Bottom Right
+                surround[7] = 0; //Bottom Right
                 surround[2] = squareUp;     //Top
                 surround[5] = squareDown;   //Bottom
-                surround[3] = 0; //TopLeft
+                surround[3] = squareLeft - grid; //TopLeft
                 surround[6] = squareDown - 1; //Bottom Left
                 surround[0] = squareLeft;   //Left
             }
@@ -93,7 +99,7 @@ namespace GameofLife
                 //left side origin
                 squareLeft = square + (grid - 1);
                 surround[3] = squareLeft - grid; //TopLeft
-                surround[6] = squareLeft + grid; //Bottom Left
+                surround[6] = squareLeft + grid; //Bottom Left 
                 surround[0] = squareLeft;   //Left
                 surround[2] = squareUp;     //Top
                 surround[5] = squareDown;   //Bottom
@@ -127,7 +133,7 @@ namespace GameofLife
                 surround[6] = squareDown - 1; //Bottom Left
                 surround[7] = squareDown + 1; //Bottom Right
             }
-            else if(square > size - index)
+            else if(square > size - grid)
             {
                 //Bottom origin
                 squareDown = square - (size - grid);
