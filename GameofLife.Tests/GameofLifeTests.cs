@@ -18,7 +18,7 @@ namespace GameofLife.Tests
         public void SurroundTest()
         {
             LifeGame test = new LifeGame(25);
-            int[] cells = test.SurrondingCells(22, 25);   //Bottom square test
+            int[] cells = test.SurrondingCells(22);   //Bottom square test
             Assert.Equal(23, cells[1]); // Right
             Assert.Equal(21, cells[0]); // left
             Assert.Equal(17, cells[2]);  // top
@@ -33,7 +33,7 @@ namespace GameofLife.Tests
         public void SurroundTestTopLeftCorner()
         {
             LifeGame test = new LifeGame(25);
-            int[] cells = test.SurrondingCells(0, 25);   //Top left corner test
+            int[] cells = test.SurrondingCells(0);   //Top left corner test
             Assert.Equal(1, cells[1]); // Right
             Assert.Equal(4, cells[0]); // left
             Assert.Equal(20, cells[2]);  // top
@@ -48,7 +48,7 @@ namespace GameofLife.Tests
         public void SurroundTestTopRightCorner()
         {
             LifeGame test = new LifeGame(25);
-            int[] cells = test.SurrondingCells(4, 25);   //Top left corner test
+            int[] cells = test.SurrondingCells(4);   //Top left corner test
             Assert.Equal(0, cells[1]); // Right
             Assert.Equal(3, cells[0]); // left
             Assert.Equal(24, cells[2]);  // top
@@ -63,7 +63,7 @@ namespace GameofLife.Tests
         public void SurroundTestBottomLeftCorner()
         {
             LifeGame test = new LifeGame(36);
-            int[] cells = test.SurrondingCells(30, 36);   //bottom left corner test
+            int[] cells = test.SurrondingCells(30);   //bottom left corner test
             Assert.Equal(31, cells[1]); // Right
             Assert.Equal(35, cells[0]); // left
             Assert.Equal(24, cells[2]);  // top

@@ -1,48 +1,112 @@
 ﻿using System;
 using System.Collections;
-using System.Security.Cryptography.X509Certificates;
+using System.Runtime.Serialization.Formatters;
+using System.Timers;
 
 namespace GameofLife
 {
     public class Program
     {
+        private static System.Timers.Timer aTimer;
+        public static LifeGame game = new LifeGame(2304);
+        private static void SetTimer()
+        {
+            // Create a timer with a two second interval.
+            aTimer = new System.Timers.Timer(750);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",e.SignalTime);
+            Console.SetCursorPosition(0, 0);
+            PrintValues(game.World, game.Grid);
+            game = GetNewWorld(game);
+        }
+
         public static void Main(string[] args)
         {
-            LifeGame game = new LifeGame(400);
-            
-            game.World[15] = true;
-            game.World[17] = true;
-            game.World[22] = true;
-            game.World[4] = true;
-            game.World[8] = true;
-            game.World[23] = true;
-            game.World[25] = true;
-            game.World[36] = true;
-            game.World[52] = true;
-            game.World[53] = true;
-            game.World[95] = true;
-            game.World[55] = true;
-            game.World[72] = true;
-            game.World[78] = true;
-            game.World[105] = true;
+            Console.SetWindowSize(200, 50);
+            Console.ForegroundColor= ConsoleColor.Magenta;
 
+
+            RandomSeed();
+            SetTimer();
+
+            //Console.WriteLine("\nPress the Enter key to exit the application...\n");
+            //Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
+            Console.ReadLine();
+            aTimer.Stop();
+            aTimer.Dispose();
+
+            Console.WriteLine("Terminating the application...");
+            /*
+            int board = 0;
+            bool isValid = false;
+            Console.WriteLine("Welcome to the Game of Life!");
             while (true)
             {
-                PrintValues(game.World, game.Grid);
-                Console.Write("\nWould you like to go into the future: (y/n): ");
-                string input = Console.ReadLine().ToLower();
-                if (input == "n" || input == "no")
+                Console.WriteLine("Please enter an integer: ");
+                isValid = int.TryParse(Console.ReadLine(), out board);
+                if (isValid)
                 {
                     break;
                 }
-                else
-                {
-                    game = GetNewWorld(game);
-                    Console.WriteLine();
-                }
             }
 
+            board = board * board;
+            LifeGame game = new LifeGame(board);
+
+
+            Console.SetCursorPosition(0, 0);
+            PrintValues(game.World, game.Grid);
+
+            /*
+            Console.Write("\nWould you like to go into the future: (y/n): ");
+            string input = Console.ReadLine().ToLower();
+            if (input == "n" || input == "no")
+            {
+                break;
+            }
+            else
+            {
+                game = GetNewWorld(game);
+                Console.WriteLine();
+            }
+            */
+
+
         }
+
+        public static void RandomSeed()
+        {
+            Random seedtime = new Random();
+            int x;
+            int howMany;
+
+            howMany = seedtime.Next(250);
+            for (int i = 0; i< howMany; i++)
+            {
+                x = seedtime.Next(900);
+                OnOffSwitch(x);
+            }
+        }
+
+        public static void OnOffSwitch(int x)
+        {
+            if (game.World[x])
+            {
+                game.World[x] = false;
+            }
+            else
+            {
+                game.World[x] = true;
+            }
+        }
+
+
 
         public static LifeGame GetNewWorld(LifeGame world)
         {
@@ -51,7 +115,7 @@ namespace GameofLife
             {
                 cloneWorld.World[i] = world.World[i];
             }
-            for (int i =0; i<world.Size; i++)
+            for (int i = 0; i < world.Size; i++)
             {
                 cloneWorld.World[i] = LiveOrDie(world, i);
             }
@@ -64,7 +128,7 @@ namespace GameofLife
         {
             int[] outskirts = world.SurrondingCells(square);
             int lifeTracker = 0;
-            for(int i = 0; i<8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 int j = outskirts[i];
                 if (world.World[j])
@@ -72,13 +136,13 @@ namespace GameofLife
                     lifeTracker++;
                 }
             }
-            
-            
+
+
             if (world.World[square])
             {
-                if(lifeTracker < 2 || lifeTracker > 3)
+                if (lifeTracker < 2 || lifeTracker > 3)
                 {
-                    return false;   
+                    return false;
                 }
                 else
                 {
@@ -87,7 +151,7 @@ namespace GameofLife
             }
             else
             {
-                if(lifeTracker == 3) 
+                if (lifeTracker == 3)
                 {
                     return true;
                 }
@@ -96,7 +160,7 @@ namespace GameofLife
                     return false;
                 }
             }
-        } 
+        }
 
 
 
@@ -112,13 +176,13 @@ namespace GameofLife
                 }
                 i--;
                 string display;
-                if ((bool)obj) 
+                if ((bool)obj)
                 {
-                    display = "X";
+                    display = "ʘ";
                 }
                 else
                 {
-                    display = ".";
+                    display = " ";
                 }
                 Console.Write("{0,3}", display);
             }
